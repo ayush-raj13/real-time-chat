@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    const ws = new WebSocket("ws://localhost:8080", "echo-protocol");
+    const userId = Math.floor(Math.random() * 10000).toString();
+    ws.onopen = function() {
+      ws.send(JSON.stringify({
+        type: "JOIN_ROOM",
+        payload: {
+          name: "ayush",
+          userId,
+          roomId: "1",
+        }
+      }));
+    }
+
+    ws.onmessage = function(event) {
+      try {
+        const parsedMessage = JSON.parse(event.data);
+        const { payload, type } = parsedMessage;
+        if (type === "ADD_CHAT") {
+          const textNode = document.createElement("p");
+          textNode.id = payload.chatId;
+          textNode.innerHTML = payload.message + `<span> (${payload.upvotes})<span>`;
+          document.getElementById("messages").appendChild(textNode);
+          const upvoteButton = document.createElement("button");
+          upvoteButton.onclick = upvoteChat;
+          upvoteButton.innerHTML = "Upvote";
+          document.getElementById(payload.chatId).appendChild(upvoteButton);
+        } else if (type === "UPDATE_CHAT") {
+          document.getElementById(payload.chatId).querySelector('span').innerHTML = ` (${payload.upvotes})`;
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function sendChat() {
+      const message = document.getElementById("inputtext").value;
+      if (message === "") {
+        alert("Input is empty!");
+        return;
+      }
+
+      ws.send(JSON.stringify({
+        type: "SEND_MESSAGE",
+        payload: {
+          message,
+          userId: userId,
+          roomId: "1",
+        }
+      }));
+    }
+
+    function upvoteChat() {
+      ws.send(JSON.stringify({
+        type: "UPVOTE_MESSAGE",
+        payload: {
+          userId: userId,
+          roomId: "1",
+          chatId: this.parentNode.id,
+        }
+      }));       
+    }
+  </script>
+  <input type="text" id="inputtext"></input>
+  </br>
+  <button onclick="sendChat()">Send Chat</button>
+  </br>
+  <div id="messages"></div>
+</body>
+</html>

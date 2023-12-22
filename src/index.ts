@@ -46,6 +46,7 @@ wsServer.on('request', function(request) {
         // Todo add rate limiting logic here
         if (message.type === 'utf8') {
             try {
+                console.log("inside with message" + message.utf8Data);
                 messageHandler(connection, JSON.parse(message.utf8Data));
             } catch (error) {
                 
@@ -54,12 +55,10 @@ wsServer.on('request', function(request) {
             // connection.sendUTF(message.utf8Data);
         }
     });
-    connection.on('close', function(reasonCode, description) {
-        console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
-    });
 });
 
 function messageHandler(ws: connection, message: IncomingMessage): void {
+  console.log("incoming message " + JSON.stringify(message));
   const { type, payload } = message;
 
   switch (type) {
