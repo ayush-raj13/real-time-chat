@@ -1,0 +1,25 @@
+{
+  "name": "real-time-chat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayush-raj13/real-time-chat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ayush-raj13/real-time-chat/issues"
+  },
+  "homepage": "https://github.com/ayush-raj13/real-time-chat#readme",
+  "dependencies": {
+    "@types/websocket": "^1.0.10",
+    "websocket": "^1.0.34",
+    "zod": "^3.22.4"
+  }
+}
